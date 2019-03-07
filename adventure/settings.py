@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'graphene_django',
+
 ] + CUSTOM_APPS
+
+GRAPHENE = {
+    'SCHEMA': 'adventure.schema.schema',
+    'SCHEMA_INDENT': 4,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
