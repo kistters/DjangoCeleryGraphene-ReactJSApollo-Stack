@@ -20,6 +20,7 @@ schema = graphene.Schema(query=Query)
 query {
   pokemons:allPokemons {
     name
+    id
   },
   types:allTypes {
     name
@@ -36,5 +37,17 @@ query {
       name
     }
   },
+  pokemonsWithTypesListByName:allPokemons(pokeName:"cha") {
+    name,
+    types {
+      name
+    },
+  },
+  typesWithPokemonListByName:allTypes(typeName:"grass") {
+    name,
+    poke_list:pokemonSet {
+      name
+    }
+  }
 }
 '''

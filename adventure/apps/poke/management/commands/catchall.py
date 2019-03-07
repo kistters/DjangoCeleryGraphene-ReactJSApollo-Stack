@@ -10,9 +10,11 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("\nGotta catch 'em all!\n"))
 
         ##TODO improve to pokemon/?limit=151
-        for idx in range(1, 152):     
+        for idx in range(1, 152):
             url = 'https://pokeapi.co/api/v2/pokemon/{}/'.format(idx)
+
             r = requests.get(url)
+            ##TODO validate body response 
             data = r.json()
 
             poke = {

@@ -12,11 +12,25 @@ class TypeType(DjangoObjectType):
         model = Type
 
 class Query(object):
-    all_pokemons = graphene.List(PokemonType)
-    all_types = graphene.List(TypeType)
+    all_pokemons = graphene.List(PokemonType,
+                                 poke_name=graphene.String())
+
+    all_types = graphene.List(TypeType,
+                             type_name=graphene.String())
 
     def resolve_all_pokemons(self, info, **kwargs):
-        return Pokemon.objects.prefetch_related('types').all()
+
+        poke_name = kwargs.get('poke_name')
+
+        if poke_name is not None: 
+            return Pokemon.objects.filter(name__contains=poke_name).prefetch_related('types')
+
+        return Pokemon.objects.all().prefetch_related('types')
 
     def resolve_all_types(self, info, **kwargs):
-        return Type.objects.prefetch_related('pokemon_set').all()
+        type_name = kwargs.get('type_name')
+
+        if type_name is not None: 
+            return Type.objects.filter(name__contains=type_name).prefetch_related('pokemon_set')
+
+        return Type.objects.all().prefetch_related('pokemon_set')
