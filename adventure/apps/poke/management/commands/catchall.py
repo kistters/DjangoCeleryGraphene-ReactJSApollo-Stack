@@ -24,12 +24,12 @@ class Command(BaseCommand):
 
             pokeObj, poke_created = Pokemon.objects.get_or_create(name=poke['name'],)
 
-            for type_name in poke['types']:
-                typeObj, type_created = Type.objects.get_or_create(name=type_name,)
-
-                pokeObj.types.add(typeObj)
-        
             if poke_created:
+                for type_name in poke['types']:
+                    typeObj, type_created = Type.objects.get_or_create(name=type_name,)
+
+                    pokeObj.types.add(typeObj)
+        
                 self.stdout.write(self.style.SUCCESS('[{}] captured!'.format(pokeObj.name.capitalize())))
             else:
                 self.stdout.write('[{}] has already been caught!'.format(pokeObj.name.capitalize()))
