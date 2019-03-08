@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.files.base import ContentFile
 from adventure.apps.poke.models import Pokemon, Type
-import requests
-import asyncio
+import requests, asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -18,23 +18,37 @@ class Command(BaseCommand):
 
         data = response.json()
 
-        poke = {
-                "name": data['name'],
-                "types": [x['type']['name'] for x in data['types']]
-            }
+        sprites = data['sprites']
 
-        pokeObj, poke_created = Pokemon.objects.get_or_create(name=poke['name'],)
+        poke, poke_created = Pokemon.objects.get_or_create(
+                                    name=data['name'], 
+                                    poke_id=data['id'])
 
         if poke_created:
-            for type_name in poke['types']:
-                typeObj, type_created = Type.objects.get_or_create(name=type_name,)
-                pokeObj.types.add(typeObj)
-    
-            self.stdout.write(self.style.SUCCESS('[{}] captured!'.format(pokeObj.name.capitalize())))
-        else:
-            self.stdout.write('[{}] has already been caught!'.format(pokeObj.name.capitalize()))
+            for type_name in [x['type']['name'] for x in data['types']]:
+                type_obj, type_created = Type.objects.get_or_create(name=type_name,)
+                if type_created:
+                    self.stdout.write('type [{}] included.'.format(type_obj.name))
+                    
+                poke.types.add(type_obj)
 
-        return data
+            if sprites.get('front_default', False):
+                res_default = requests.get(sprites.get('front_default'))
+                default_filename = "{}.png".format(poke.name)
+                poke.img_default.save(default_filename, ContentFile(res_default.content), save=False)
+
+            if sprites.get('front_shiny', False):
+                res_shiny = requests.get(sprites.get('front_shiny'))
+                shiny_filename = "{}_shiny.png".format(poke.name)
+                poke.img_shiny.save(shiny_filename, ContentFile(res_shiny.content), save=False)
+
+            poke.save()
+
+            self.stdout.write(self.style.SUCCESS('[{}] captured!'.format(poke.name.capitalize())))
+        else:
+            self.stdout.write('[{}] has already been caught!'.format(poke.name.capitalize()))
+
+        return poke
 
 
     async def get_pokes_asynchronous(self):
@@ -63,20 +77,7 @@ class Command(BaseCommand):
         loop = asyncio.get_event_loop()
         future = asyncio.ensure_future(self.get_pokes_asynchronous())
         loop.run_until_complete(future)
-
+        
         self.stdout.write(self.style.SUCCESS("\nThat's all folks!\n"))
 
-        # try:
-        #     pokemon = models.Pokemon.objects.get(name=data['name'])
-        # except models.Pokemon.DoesNotExist:
-        #     pokemon = models.Pokemon(name=data['name'])
-        #     pokemon.save()
-        #
-        # for type_name in poke['types']:
-        #     try:
-        #         typeName = models.Type.objects.get(name=type_name)
-        #     except models.Type.DoesNotExist:
-        #         typeName = models.Type(name=type_name)
-        #         typeName.save()
-        #
-        #     pokemon.types.add(typeName)
+       
