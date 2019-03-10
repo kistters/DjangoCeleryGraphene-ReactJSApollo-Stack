@@ -44,7 +44,10 @@ class Command(BaseCommand):
                 self.stdout.write('type [{}] included.'.format(type_obj.name))
             types_list.append(type_obj)
 
-        poke.types.set(types_list)
+        try:
+            poke.types.set(types_list)
+        except:
+          print("faill add types to {}".format(poke.name))
 
     def include_poke_sprites(self, poke, poke_sprites):
         if poke.img_shiny.name == poke.img_shiny.field.get_default():
@@ -64,7 +67,7 @@ class Command(BaseCommand):
         ##TODO improve to pokemon/?limit=151
         poke_ids = list(range(1, 152))
 
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        with ThreadPoolExecutor(max_workers=20) as executor:
             with requests.Session() as session:
                 # Set any session parameters here before calling `catch`
                 loop = asyncio.get_event_loop()
