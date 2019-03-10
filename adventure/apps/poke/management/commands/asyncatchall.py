@@ -33,12 +33,12 @@ class Command(BaseCommand):
                 poke.types.add(type_obj)
 
             if sprites.get('front_default', False):
-                res_default = requests.get(sprites.get('front_default'))
+                res_default = session.get(sprites.get('front_default'))
                 default_filename = "{}.png".format(poke.name)
                 poke.img_default.save(default_filename, ContentFile(res_default.content), save=False)
 
             if sprites.get('front_shiny', False):
-                res_shiny = requests.get(sprites.get('front_shiny'))
+                res_shiny = session.get(sprites.get('front_shiny'))
                 shiny_filename = "{}_shiny.png".format(poke.name)
                 poke.img_shiny.save(shiny_filename, ContentFile(res_shiny.content), save=False)
 

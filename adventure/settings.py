@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 CUSTOM_APPS = [
     'adventure.apps.poke',
+    'adventure.apps.trainer',
 ]
 
 INSTALLED_APPS = [
