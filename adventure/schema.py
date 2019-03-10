@@ -15,10 +15,10 @@ class Mutation(graphene.ObjectType):
 	pass
 
 schema = graphene.Schema(query=Query)
-
-
-#test in /graphql
+""" https://www.howtographql.com/graphql-python/0-introduction/ """
+  
 '''
+# https://graphql.org/learn/queries/
 {
   pokemons: allPokemons {
     name

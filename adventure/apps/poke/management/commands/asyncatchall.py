@@ -18,31 +18,17 @@ class Command(BaseCommand):
 
         data = response.json()
 
-        sprites = data['sprites']
+        poke_types = data['types']
+        poke_sprites = data['sprites']
 
         poke, poke_created = Pokemon.objects.get_or_create(
                                     name=data['name'], 
                                     poke_id=data['id'])
 
+        self.include_poke_sprites(poke, poke_sprites)
+
         if poke_created:
-            for type_name in [x['type']['name'] for x in data['types']]:
-                type_obj, type_created = Type.objects.get_or_create(name=type_name,)
-                if type_created:
-                    self.stdout.write('type [{}] included.'.format(type_obj.name))
-                    
-                poke.types.add(type_obj)
-
-            if sprites.get('front_default', False):
-                res_default = session.get(sprites.get('front_default'))
-                default_filename = "{}.png".format(poke.name)
-                poke.img_default.save(default_filename, ContentFile(res_default.content), save=False)
-
-            if sprites.get('front_shiny', False):
-                res_shiny = session.get(sprites.get('front_shiny'))
-                shiny_filename = "{}_shiny.png".format(poke.name)
-                poke.img_shiny.save(shiny_filename, ContentFile(res_shiny.content), save=False)
-
-            poke.save()
+            self.include_poke_types(poke, poke_types)
 
             self.stdout.write(self.style.SUCCESS('[{}] captured!'.format(poke.name.capitalize())))
         else:
@@ -50,12 +36,35 @@ class Command(BaseCommand):
 
         return poke
 
+    def include_poke_types(self, poke, poke_types):
+        types_list = []
+        for type_name in [x['type']['name'] for x in poke_types]:
+            type_obj, type_created = Type.objects.get_or_create(name=type_name,)
+            if type_created:
+                self.stdout.write('type [{}] included.'.format(type_obj.name))
+            types_list.append(type_obj)
+
+        poke.types.set(types_list)
+
+    def include_poke_sprites(self, poke, poke_sprites):
+        if poke.img_shiny.name == poke.img_shiny.field.get_default():
+            if poke_sprites.get('front_default', False):
+                res_default = requests.get(poke_sprites.get('front_default'))
+                default_filename = "{}.png".format(poke.name)
+                poke.img_default.save(default_filename, ContentFile(res_default.content), save=True)
+
+        if poke.img_shiny.name == poke.img_shiny.field.get_default():
+            if poke_sprites.get('front_shiny', False):
+                res_shiny = requests.get(poke_sprites.get('front_shiny'))
+                shiny_filename = "{}_shiny.png".format(poke.name)
+                poke.img_shiny.save(shiny_filename, ContentFile(res_shiny.content), save=True)
+
 
     async def get_pokes_asynchronous(self):
         ##TODO improve to pokemon/?limit=151
         poke_ids = list(range(1, 152))
 
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor(max_workers=5) as executor:
             with requests.Session() as session:
                 # Set any session parameters here before calling `catch`
                 loop = asyncio.get_event_loop()
