@@ -21,16 +21,18 @@ class Query(object):
     def resolve_all_pokemons(self, info, **kwargs):
 
         poke_name = kwargs.get('poke_name')
+        poke_queryset = Pokemon.objects.all().prefetch_related('types').exclude(enable=False)
+        
+        if poke_name is not None:
+            return poke_queryset.filter(name__contains=poke_name)
 
-        if poke_name is not None: 
-            return Pokemon.objects.filter(name__contains=poke_name).prefetch_related('types')
-
-        return Pokemon.objects.all().prefetch_related('types')
+        return poke_queryset
 
     def resolve_all_types(self, info, **kwargs):
         type_name = kwargs.get('type_name')
+        type_queryset = Type.objects.all().prefetch_related('pokemon_set')
 
         if type_name is not None: 
-            return Type.objects.filter(name__contains=type_name).prefetch_related('pokemon_set')
+            return type_queryset.filter(name__contains=type_name)
 
-        return Type.objects.all().prefetch_related('pokemon_set')
+        return type_queryset

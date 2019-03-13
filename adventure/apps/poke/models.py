@@ -14,6 +14,7 @@ class Pokemon(models.Model):
     poke_id = models.IntegerField(unique=True, default=None)
     img_default = models.ImageField(upload_to='pokes/', default='pokes/poke.png')
     img_shiny = models.ImageField(upload_to='pokes/', default='pokes/poke.png')
+    enable = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-poke_id']
