@@ -1,38 +1,31 @@
 import graphene
 
 from graphene_django.types import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from .models import Pokemon, Type
 
 class PokemonType(DjangoObjectType):
     class Meta:
         model = Pokemon
+        interfaces = (graphene.Node, )
+        filter_fields = {
+            'poke_id': ['exact'],
+            'name': ['iexact', 'icontains', 'istartswith'],
+            'enable': ['exact'],
+        }
 
 class TypeType(DjangoObjectType):
     class Meta:
         model = Type
+        interfaces = (graphene.Node, )
+        filter_fields = {
+            'name': ['iexact', 'icontains', 'istartswith'],
+        }
 
 class Query(object):
-    all_pokemons = graphene.List(PokemonType,
-                                 poke_name=graphene.String())
 
-    all_types = graphene.List(TypeType,
-                             type_name=graphene.String())
+    pokemon = graphene.Node.Field(PokemonType)
+    all_pokemons = DjangoFilterConnectionField(PokemonType)
 
-    def resolve_all_pokemons(self, info, **kwargs):
-
-        poke_name = kwargs.get('poke_name')
-        poke_queryset = Pokemon.objects.all().prefetch_related('types').exclude(enable=False)
-        
-        if poke_name is not None:
-            return poke_queryset.filter(name__contains=poke_name)
-
-        return poke_queryset
-
-    def resolve_all_types(self, info, **kwargs):
-        type_name = kwargs.get('type_name')
-        type_queryset = Type.objects.all().prefetch_related('pokemon_set')
-
-        if type_name is not None: 
-            return type_queryset.filter(name__contains=type_name)
-
-        return type_queryset
+    type = graphene.Node.Field(TypeType)
+    all_types = DjangoFilterConnectionField(TypeType)
