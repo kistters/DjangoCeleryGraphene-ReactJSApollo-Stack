@@ -17,79 +17,24 @@ try it :)
 ```graphql
 # https://graphql.org/learn/queries/
 {
-  pokemons: allPokemons {
-    name
-    pokeId
-    catchBy: pokeballSet {
-      owner {
-        username
+  pokesWithTypes: allPokemons {
+    edges {
+      node {
+        ...PokeWithTypesEntity
       }
     }
   }
-  types: allTypes {
-    name
-  }
-  pokemonsWithTypesList: allPokemons {
-    name
-    types {
-      name
-    }
-  }
-  typesWithPokemonList: allTypes {
-    name
-    poke_list: pokemonSet {
-      name
-    }
-  }
-  pokemonsWithTypesListByName: allPokemons(pokeName: "cha") {
-    name
-    types {
-      name
-    }
-  }
-  typesWithPokemonListByName: allTypes(typeName: "grass") {
-    name
-    poke_list: pokemonSet {
-      name
-    }
-  }
-  trainersWithPokeballs: allTrainers {
-    username
-    email
-    pokeballs {
-      customName: name
-      poke {
-        id
-        pokeId
+  typesWithPokes: allTypes {
+    edges {
+      node {
+        ...TypesWithPokeEntity
       }
     }
-  }
-  pokeballsWithOwners: allPokeballs {
-    id
-    customName: name
-    owner {
-      username
-    }
-    poke {
-      name
-      pokeId
-    }
-  }
-  pokeballsAllList:allPokeballs{
-    ...PokeBallEntity
   }
 }
 
-##Fragments
-fragment PokeBallEntity on PokeballType {
-  customName: name
-  owner {
-    id
-    username
-  }
-  poke {
-    ...PokeEntity
-  }
+fragment TypeEntity on TypeType {
+  name
 }
 
 fragment PokeEntity on PokemonType {
@@ -97,5 +42,30 @@ fragment PokeEntity on PokemonType {
   pokeId
   imgDefault
   imgShiny
+}
+
+fragment TypesWithPokeEntity on TypeType {
+  name
+  poke_list: pokemonSet {
+    edges {
+      node {
+        ...PokeEntity
+      }
+    }
+  }
+}
+
+fragment PokeWithTypesEntity on PokemonType {
+  name
+  pokeId
+  imgDefault
+  imgShiny
+  types {
+    edges {
+      node {
+        ...TypeEntity
+      }
+    }
+  }
 }
 ```
