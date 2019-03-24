@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  adventure:
+    build: .
+    command: ["runserver", "0.0.0.0:8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/srv
+    depends_on:
+      - db-postgres
+    networks:
+      - compose-network
+
+  db-postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "adventure"
+    ports:
+      - "5432:5432"
+    volumes:
+      - .data/postgres:/var/lib/postgresql/data 
+    networks:
+      - compose-network
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "ash@poke.com"
+      PGADMIN_DEFAULT_PASSWORD: "pikachu"
+    ports:
+      - "16543:80"
+    depends_on:
+      - db-postgres
+    networks:
+      - compose-network
+
+networks: 
+  compose-network:
+    driver: bridge

@@ -90,8 +90,12 @@ WSGI_APPLICATION = 'adventure.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'adventure'),
+        'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'root'),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'db-postgres'),
+        'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
     }
 }
 
