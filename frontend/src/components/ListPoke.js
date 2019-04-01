@@ -6,7 +6,7 @@ import Poke from '../components/Poke'
 
 class ListPoke extends React.Component {
 
-  render() {
+  render(props) {
 
     if (this.props.allPokemonsQuery.loading) {
       return (
@@ -18,12 +18,17 @@ class ListPoke extends React.Component {
       )
     }
 
+    var pokes = this.props.allPokemonsQuery.allPokemons
 
     return (
-      <div className='pokemons'>
-          {this.props.allPokemonsQuery.allPokemons && this.props.allPokemonsQuery.allPokemons.map(poke => (
-            <Poke key={poke.pokeId} name={poke.name} types={poke.types}/>
+      <div className="container-fluid">
+        <div className="row">
+          {pokes.edges.map(poke => (
+            <div>
+              <Poke key={poke.node.pokeId} image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
+            </div>
           ))}
+        </div>
       </div>
     )
   }
@@ -32,10 +37,19 @@ class ListPoke extends React.Component {
 const ALL_POKEMONS_QUERY = gql`
   query allPokemons {
     allPokemons {
-      name
-      pokeId
-      types {
-        name
+      edges {
+        node {
+          name
+          pokeId
+          imgDefaultField
+          types {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -43,10 +57,6 @@ const ALL_POKEMONS_QUERY = gql`
 
 const ListPokemonWithQuery = graphql(ALL_POKEMONS_QUERY, {
   name: 'allPokemonsQuery',
-  options: {
-    fetchPolicy: 'network-only',
-    credentials: 'same-origin',
-  },
 })(ListPoke)
 
 export default ListPokemonWithQuery
