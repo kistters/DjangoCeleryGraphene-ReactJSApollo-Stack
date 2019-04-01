@@ -9,7 +9,7 @@ services:
     depends_on:
       - adventure
     ports:
-      - 3000:3000
+      - "3000:3000"
     command: npm start
     networks:
       - compose-network
