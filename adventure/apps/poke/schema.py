@@ -4,6 +4,7 @@ from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from .models import Pokemon, Type
 
+
 class PokemonType(DjangoObjectType):
     class Meta:
         model = Pokemon
@@ -14,6 +15,12 @@ class PokemonType(DjangoObjectType):
             'enable': ['exact'],
         }
 
+    img_default_field = graphene.String()
+
+    def resolve_img_default_field(self, resolve):
+        return resolve.context.build_absolute_uri(self.img_default and self.img_default.url)
+
+
 class TypeType(DjangoObjectType):
     class Meta:
         model = Type
@@ -21,6 +28,7 @@ class TypeType(DjangoObjectType):
         filter_fields = {
             'name': ['iexact', 'icontains', 'istartswith'],
         }
+
 
 class Query(object):
 
