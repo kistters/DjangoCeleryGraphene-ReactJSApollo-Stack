@@ -94,11 +94,13 @@ DATABASES = {
         'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'adventure'),
         'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
         'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'root'),
-        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'db-postgres'),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'postgres-service'),
         'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
     }
 }
 
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://rabbitmq-service'),
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
