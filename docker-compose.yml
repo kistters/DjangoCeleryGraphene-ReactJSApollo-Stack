@@ -23,6 +23,7 @@ services:
       - .:/code
     depends_on:
       - postgres-service
+      - celery-worker-service
     networks:
       - compose-network
 

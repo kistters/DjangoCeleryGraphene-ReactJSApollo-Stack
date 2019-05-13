@@ -32,12 +32,10 @@ class TypeType(DjangoObjectType):
 
 class Query(object):
 
-    pokemon = graphene.Node.Field(PokemonType)
     all_pokemons = DjangoFilterConnectionField(PokemonType, ativo=graphene.Boolean())
+    all_types = DjangoFilterConnectionField(TypeType)
+
 
     def resolve_all_pokemons(self, info, **kargs):
-        """" graphene_django/fields.py: 69 merge QuerySets """
+        """" graphene_django/fields.py: merge_querysets """
         return Pokemon.objects.all().exclude(enable=False)
-
-    type = graphene.Node.Field(TypeType)
-    all_types = DjangoFilterConnectionField(TypeType)
