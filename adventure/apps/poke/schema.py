@@ -1,7 +1,7 @@
 import graphene
-
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+
 from .models import Pokemon, Type
 
 
@@ -35,7 +35,7 @@ class Query(object):
     all_pokemons = DjangoFilterConnectionField(PokemonType, ativo=graphene.Boolean())
     all_types = DjangoFilterConnectionField(TypeType)
 
-
+    @staticmethod
     def resolve_all_pokemons(self, info, **kargs):
         """" graphene_django/fields.py: merge_querysets """
         return Pokemon.objects.all().exclude(enable=False)

@@ -6,3 +6,4 @@ django-filter>=2
 django-cors-headers>=2
 psycopg2_binary>=2
 celery>=4
+django-graphql-jwt==0.2.1
