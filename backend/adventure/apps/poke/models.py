@@ -12,8 +12,8 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=64, blank=False, unique=True)
     types = models.ManyToManyField(Type)
     poke_id = models.IntegerField(unique=True, default=None)
-    img_default = models.ImageField(upload_to='pokes/', default='pokes/poke.png')
-    img_shiny = models.ImageField(upload_to='pokes/', default='pokes/poke.png')
+    img_default = models.ImageField(upload_to='pokes/',)
+    img_shiny = models.ImageField(upload_to='pokes/',)
     enable = models.BooleanField(default=True)
 
     class Meta:

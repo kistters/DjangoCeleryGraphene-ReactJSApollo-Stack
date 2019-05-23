@@ -17,12 +17,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pokemon',
             name='img_default',
-            field=models.ImageField(default='pokes/poke.png', upload_to='pokes/'),
+            field=models.ImageField(upload_to='pokes/'),
         ),
         migrations.AddField(
             model_name='pokemon',
             name='img_shiny',
-            field=models.ImageField(default='pokes/poke.png', upload_to='pokes/'),
+            field=models.ImageField( upload_to='pokes/'),
         ),
         migrations.AddField(
             model_name='pokemon',

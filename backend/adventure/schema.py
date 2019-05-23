@@ -11,7 +11,7 @@ class Query(graphene.ObjectType, PokeSchema.Query, TrainerSchema.Query):
 	pass
 
 
-class Mutation(TrainerSchema.Mutation):
+class Mutation(graphene.ObjectType, TrainerSchema.Mutation):
 	"""docstring for Mutation"""
 	token_auth = graphql_jwt.ObtainJSONWebToken.Field()
 	verify_token = graphql_jwt.Verify.Field()

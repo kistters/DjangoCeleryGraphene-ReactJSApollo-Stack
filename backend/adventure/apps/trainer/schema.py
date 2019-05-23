@@ -82,5 +82,5 @@ class CreateTrainer(graphene.Mutation):
         return CreateTrainer(ok=ok, trainer=trainer_instance)
 
 
-class Mutation(graphene.ObjectType):
+class Mutation(object):
     create_trainer = CreateTrainer.Field()

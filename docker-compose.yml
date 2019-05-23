@@ -2,30 +2,42 @@ version: '3'
 
 services:
 
-  front-service:
-    build: frontend
+  react-front:
+    image: adventure-frontend
     volumes:
-      - ./frontend:/usr/src/app
+      - ./frontend:/app
     depends_on:
-      - back-service
+      - django-back
     ports:
       - "3000:3000"
     command: npm start
     networks:
       - compose-network
 
-  back-service: &back-service
-    build: .
+  django-back: &backend
+    image: adventure-backend
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
       - "8000:8000"
     volumes:
-      - .:/code
+      - ./backend:/code
     depends_on:
       - postgres-service
-      - celery-worker-service
     networks:
       - compose-network
+
+  celery-worker-back:
+      <<: *backend
+      command: celery -A adventure worker --loglevel=info
+      ports: []
+      depends_on:
+        - rabbitmq-service
+        - postgres-service
+      networks:
+        - compose-network
+
+
+## -- services --
 
   postgres-service:
     image: postgres:alpine
@@ -58,13 +70,6 @@ services:
     networks:
       - compose-network
 
-  celery-worker-service:
-      <<: *back-service
-      command: celery -A adventure worker --loglevel=info
-      ports: []
-      depends_on:
-        - rabbitmq-service
-        - postgres-service
 
 networks:
   compose-network:
