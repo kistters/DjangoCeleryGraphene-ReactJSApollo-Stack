@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import './styles/index.css';
-import App from './components/App';
+
 import * as serviceWorker from './serviceWorker';
 
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from "react-apollo";
 import { HttpLink, InMemoryCache } from 'apollo-boost'
 
+
+import App from './components/App';
 
 
 const httpLink = new HttpLink({ uri: 'http://127.0.0.1:8000/graphql/' })

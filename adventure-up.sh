@@ -1,8 +1,11 @@
 #!/bin/sh
 # adventure-up.sh
-#
-#docker build -t adventure-backend:latest backend
-#docker build -t adventure-frontend:latest frontend
+
+if [ "$1" == "--build" ]; then
+    docker build -t adventure-backend:latest backend
+    docker build -t adventure-frontend:latest frontend
+fi
+
 
 docker-compose up react-front django-back celery-worker-back #TODO a postgres up check
 
