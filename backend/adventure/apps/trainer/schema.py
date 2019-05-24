@@ -57,27 +57,23 @@ class Query(object):
         return Pokeball.objects.all().select_related('poke').select_related('owner')
 
 
-class TrainerInput(graphene.InputObjectType):
-    username = graphene.String(required=True)
-    password = graphene.String(required=True)
-    email = graphene.String(required=True)
-
-
 class CreateTrainer(graphene.Mutation):
     class Arguments:
-        input = TrainerInput()
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+        email = graphene.String(required=True)
 
     ok = graphene.Boolean()
     trainer = graphene.Field(TrainerType)
 
     @staticmethod
-    def mutate(root, resolve, input=None):
+    def mutate(self, info, **kwargs):
         ok = True
         trainer_instance = get_user_model()(
-            username=input.username,
-            email=input.email
+            username=kwargs.get('username'),
+            email=kwargs.get('email')
         )
-        trainer_instance.set_password(input.password)
+        trainer_instance.set_password(kwargs.get('password'))
         trainer_instance.save()
         return CreateTrainer(ok=ok, trainer=trainer_instance)
 
