@@ -12,7 +12,10 @@ class PokemonType(DjangoObjectType):
         filter_fields = {
             'poke_id': ['exact'],
             'name': ['iexact', 'icontains', 'istartswith'],
-            'enable': ['exact'],
+            'types__name': ['iexact', 'icontains', 'istartswith']
+        }
+        exclude_fields = {
+            'enable'
         }
 
     img_default_field = graphene.String()
@@ -32,7 +35,7 @@ class TypeType(DjangoObjectType):
 
 class Query(object):
 
-    all_pokemons = DjangoFilterConnectionField(PokemonType, ativo=graphene.Boolean())
+    all_pokemons = DjangoFilterConnectionField(PokemonType)
     all_types = DjangoFilterConnectionField(TypeType)
 
     @staticmethod
