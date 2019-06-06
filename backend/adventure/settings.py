@@ -12,6 +12,19 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+# Normally you should not import ANYTHING from Django directly
+# into your settings, but ImproperlyConfigured is an exception.
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_variable(var_name):
+    """Get the environment variable or return exception."""
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        raise ImproperlyConfigured("Set the {} environment variable".format(var_name))
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,7 +33,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yep4-wk79%sfrg_am&&v&qrvy0&g-)4jooly(7byw!igi)9!j@'
+SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -99,12 +112,12 @@ WSGI_APPLICATION = 'adventure.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'adventure'),
-        'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'root'),
-        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'postgres-service'),
-        'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': get_env_variable('DJANGO_DATABASE_NAME'),
+        'USER': get_env_variable('DJANGO_DATABASE_USER'),
+        'PASSWORD': get_env_variable('DJANGO_DATABASE_PASSWORD'),
+        'HOST': get_env_variable('DJANGO_DATABASE_HOST'),
+        'PORT': get_env_variable('DJANGO_DATABASE_PORT')
     }
 }
 
