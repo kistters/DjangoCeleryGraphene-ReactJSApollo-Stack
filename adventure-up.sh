@@ -1,14 +1,23 @@
 #!/bin/sh
 # adventure-up.sh
 
-if [ "$1" == "--build" ]; then
+if [[ $1 == '--build' ]]; then
     docker build -t adventure-backend:latest backend
     docker build -t adventure-frontend:latest frontend
 fi
 
+# up services
+docker-compose up -d postgres-service rabbitmq-service
 
-docker-compose up react-front django-back celery-worker-back #TODO a postgres up check
+until docker-compose exec postgres-service psql -U postgres -c "select 1" > /dev/null 2>&1; do
+    printf '.' && sleep 0.3;
+done; echo ' database up :)'
 
-#docker-compose run --rm django-back sh
-#docker-compose run --rm react-front sh
-#docker-compose run --rm celery-worker-back sh
+if [[ $1 == '--build' ]]; then
+    docker-compose up -d celery-worker-back
+    docker-compose exec celery-worker-back python manage.py migrate
+    docker-compose exec celery-worker-back python manage.py celerycatchall
+fi
+
+docker-compose up
+

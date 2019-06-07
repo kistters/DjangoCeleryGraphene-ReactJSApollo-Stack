@@ -55,18 +55,6 @@ services:
     networks:
       - compose-network
 
-  pgadmin-service:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "ash@poke.com"
-      PGADMIN_DEFAULT_PASSWORD: "pikachu"
-    ports:
-      - "16543:80"
-    depends_on:
-      - postgres-service
-    networks:
-      - compose-network
-
   rabbitmq-service:
     image: rabbitmq:3.7.0-management-alpine
     ports:

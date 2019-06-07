@@ -1,18 +1,15 @@
 # adventure
 Adventure Poke using django and graphene.. :)
 
-## Building
+## Building 
 ```sh
-$ git clone https://github.com/kistters/adventure.git
-$ cd adventure
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ python migrate
-## Gotta catch 'em all
-$ python manage.py asyncatchall
-$ python manage.py runserver
+$ bash adventure-up.sh --build
 ```
-go to [/graphQL](http://127.0.0.1:8000/graphql/) and
+
+> frontend [ReactJs](http://127.0.0.1:3000/) 
+
+> backend [/graphQL](http://127.0.0.1:8000/graphql/)
+ 
 try it :)
 ```graphql
 # https://graphql.org/learn/queries/
