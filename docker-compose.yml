@@ -5,7 +5,8 @@ services:
   react-front:
     image: adventure-frontend
     volumes:
-      - ./frontend:/app
+      - ./react-front:/usr/src/app:delegated
+      - /usr/src/app/node_modules
     depends_on:
       - django-back
     ports:
@@ -22,7 +23,7 @@ services:
     env_file:
         - .env
     volumes:
-      - ./backend:/code
+      - .:/code
     depends_on:
       - postgres-service
     networks:
@@ -32,8 +33,6 @@ services:
       <<: *backend
       command: celery -A adventure worker --loglevel=info
       ports: []
-      env_file:
-        - .env
       depends_on:
         - rabbitmq-service
         - postgres-service

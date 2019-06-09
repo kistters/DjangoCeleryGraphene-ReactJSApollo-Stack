@@ -27,7 +27,7 @@ def get_env_variable(var_name):
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+STORAGE_DIR = os.path.join(BASE_DIR, '.storage')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
     'graphene_django',
     'corsheaders',
+    'storages',
 
 ] + CUSTOM_APPS
 
@@ -160,7 +161,36 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(STORAGE_DIR, 'static/')
+MEDIA_ROOT = os.path.join(STORAGE_DIR, 'media/')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = '/static/'
+
+AWS_S3 = False
+
+if AWS_S3:
+
+    STATICFILES_STORAGE = 'adventure.s3_storage.StaticStorage'
+    DEFAULT_FILE_STORAGE = 'adventure.s3_storage.MediaStorage'
+
+    AWS_ACCESS_KEY_ID = get_env_variable('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = get_env_variable('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = get_env_variable('AWS_STORAGE_BUCKET_NAME')
+
+    AWS_IS_GZIPPED = True
+    AWS_DEFAULT_ACL = None
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    AWS_S3_DOMAIN = '//{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+
+    MEDIA_URL = AWS_S3_DOMAIN + MEDIA_ROOT
+    STATIC_URL = AWS_S3_DOMAIN + STATIC_ROOT
+
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    )
+

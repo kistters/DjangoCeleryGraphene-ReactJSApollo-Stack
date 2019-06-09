@@ -2,8 +2,8 @@
 # adventure-up.sh
 
 if [[ $1 == '--build' ]]; then
-    docker build -t adventure-backend:latest backend
-    docker build -t adventure-frontend:latest frontend
+    docker build -t adventure-backend:latest .
+    docker build -t adventure-frontend:latest react-front
 fi
 
 # up services
