@@ -24,8 +24,8 @@ class ListPoke extends React.Component {
       <div className="container-fluid">
         <div className="row">
           {pokes.edges.map(poke => (
-            <div>
-              <Poke key={poke.node.pokeId} image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
+            <div key={poke.node.pokeId}>
+              <Poke image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
             </div>
           ))}
         </div>

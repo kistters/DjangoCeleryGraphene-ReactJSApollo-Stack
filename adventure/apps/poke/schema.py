@@ -2,8 +2,14 @@ import channels_graphql_ws
 import graphene
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-
+from django.conf import settings
 from .models import Pokemon, Type
+
+
+def get_absolute_url(path=None):
+    if not path:
+        return settings.DOMAIN
+    return f'//{settings.DOMAIN}{path}'
 
 
 class PokemonType(DjangoObjectType):
@@ -19,8 +25,8 @@ class PokemonType(DjangoObjectType):
 
     img_default_field = graphene.String()
 
-    def resolve_img_default_field(self, resolve):
-        return resolve.context.build_absolute_uri(self.img_default and self.img_default.url)
+    def resolve_img_default_field(self, info, *args, **kwds):
+        return get_absolute_url(self.img_default and self.img_default.url)
 
 
 class TypeType(DjangoObjectType):
@@ -47,7 +53,7 @@ class PokeEvent(channels_graphql_ws.Subscription):
 
     # Subscription payload.
     event = graphene.String()
-    poke_types = graphene.List(graphene.String)
+    pokemon = graphene.Field(PokemonType)
 
     class Arguments:
         """That is how subscription arguments are defined."""
@@ -62,9 +68,7 @@ class PokeEvent(channels_graphql_ws.Subscription):
     @staticmethod
     def publish(payload, info, track_poke_types):
         poke = payload.get('pokemon')
-        poke_types = poke.types.all().values_list('name', flat=True)
-
-        return PokeEvent(poke_types=poke_types, event=f'pokemon: {poke.name.title()}!')
+        return PokeEvent(pokemon=poke, event=f'pokemon: {poke.name.title()}!')
 
 
 class Subscription(object):

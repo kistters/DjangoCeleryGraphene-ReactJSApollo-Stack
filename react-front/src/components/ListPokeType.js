@@ -26,26 +26,28 @@ query allPokemons($type_name: String) {
   }
 `;
 
-const ListPokeTypes = ({ classes, match }) => (
-        <Query query={GET_DOGS} variables={{"type_name": match.params.type_name}}>
-            {({ loading, error, data }) => {
-                if (loading) return "Loading...";
-                if (error) return `Error! ${error.message}`;
-                var pokes = data.allPokemons
-                return (
-                    <div className="container-fluid">
-                    <div className="row">
-                      {pokes.edges.map(poke => (
-                        <div>
-                          <Poke key={poke.node.pokeId} image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
-                        </div>
-                      ))}
+const ListPokeTypes = (props) => {
+  return (
+    <Query query={GET_DOGS} variables={{"type_name": props.match.params.type_name}}>
+        {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error) return `Error! ${error.message}`;
+            var pokes = data.allPokemons
+            return (
+                <div className="container-fluid">
+                <div className="row">
+                  {pokes.edges.map(poke => (
+                    <div>
+                      <Poke key={poke.node.pokeId} image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
-                );
-            }}
-        </Query>
-);
+            );
+        }}
+    </Query>
+    )
+};
 
 export default ListPokeTypes

@@ -48,19 +48,19 @@ CUSTOM_APPS = [
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+                     'django.contrib.admin',
+                     'django.contrib.auth',
+                     'django.contrib.contenttypes',
+                     'django.contrib.sessions',
+                     'django.contrib.messages',
+                     'django.contrib.staticfiles',
 
-    'channels',
-    'graphene_django',
-    'corsheaders',
-    'storages',
+                     'channels',
+                     'graphene_django',
+                     'corsheaders',
+                     'storages',
 
-] + CUSTOM_APPS
+                 ] + CUSTOM_APPS
 
 GRAPHENE = {
     'SUBSCRIPTION_PATH': '/ws/graphql/',
@@ -132,7 +132,6 @@ DATABASES = {
     }
 }
 
-
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://rabbitmq-service'),
 
 # Password validation
@@ -153,7 +152,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -167,13 +165,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_ROOT = os.path.join(STORAGE_DIR, 'static/')
 MEDIA_ROOT = os.path.join(STORAGE_DIR, 'media/')
 
+DOMAIN = get_env_variable('DJANGO_DOMAIN')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
@@ -203,4 +201,3 @@ if AWS_S3:
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
-

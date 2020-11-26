@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ListPoke from '../components/ListPoke';
 import ListPokeType from '../components/ListPokeType';
+import TrackPoke from '../components/TrackPoke';
 import Form from '../components/Form';
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -18,6 +19,7 @@ class App extends Component {
           <Route exact path="/" component={ListPoke} />
           <Route path="/form" component={Form} />
           <Route path="/type/:type_name" component={ListPokeType} />
+          <Route path="/track-poke" component={TrackPoke} />
         </Router>
       </div>
     );
