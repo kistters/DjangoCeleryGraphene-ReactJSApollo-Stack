@@ -2,21 +2,45 @@ import graphene
 import graphql_jwt
 
 from .apps.poke import schema as PokeSchema
-from .apps.trainer import schema as TrainerSchema
 
 
-class Query(graphene.ObjectType, PokeSchema.Query, TrainerSchema.Query):
-	"""Adventure Query Class, where is included
-	Schema.Query of the apps 4 enjoyment"""
-	pass
+class Query(graphene.ObjectType, PokeSchema.Query):
+    """Adventure Query Class, where is included
+    Schema.Query of the apps 4 enjoyment"""
+    pass
 
 
-class Mutation(graphene.ObjectType, TrainerSchema.Mutation):
-	"""docstring for Mutation"""
-	token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-	verify_token = graphql_jwt.Verify.Field()
-	refresh_token = graphql_jwt.Refresh.Field()
+class Mutation(graphene.ObjectType):
+    """docstring for Mutation"""
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+class Subscription(graphene.ObjectType, PokeSchema.Subscription):
+    """Root GraphQL subscription."""
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation, subscription=Subscription)
 """ https://www.howtographql.com/graphql-python/0-introduction/ """
+
+"""weird configuration"""
+
+import channels_graphql_ws
+
+
+class MyGraphqlWsConsumer(channels_graphql_ws.GraphqlWsConsumer):
+    """Channels WebSocket consumer which provides GraphQL API."""
+    schema = schema
+
+    # Uncomment to send keepalive message every 42 seconds.
+    # send_keepalive_every = 42
+
+    # Uncomment to process requests sequentially (useful for tests).
+    # strict_ordering = True
+
+    async def on_connect(self, payload):
+        """New client connection handler."""
+        # You can `raise` from here to reject the connection.
+        print("New client connected!")

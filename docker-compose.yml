@@ -15,7 +15,7 @@ services:
     networks:
       - compose-network
 
-  django-back: &backend
+  django-back:
     image: adventure-backend
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
@@ -24,15 +24,23 @@ services:
         - .env
     volumes:
       - .:/code
+    environment:
+      DJANGO_DATABASE_HOST: postgres-service
+      DJANGO_REDIS_HOST: redis-service
     depends_on:
       - postgres-service
+      - redis-service
     networks:
       - compose-network
 
   celery-worker-back:
-      <<: *backend
-      command: celery -A adventure worker --loglevel=info
+      image: adventure-backend
+      command: celery -A adventure worker --loglevel=INFO
       ports: []
+      env_file:
+        - .env
+      volumes:
+        - .:/code
       depends_on:
         - rabbitmq-service
         - postgres-service
@@ -61,6 +69,12 @@ services:
     networks:
       - compose-network
 
+  redis-service:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - compose-network
 
 networks:
   compose-network:

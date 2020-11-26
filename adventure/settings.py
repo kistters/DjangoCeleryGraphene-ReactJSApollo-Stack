@@ -45,7 +45,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CUSTOM_APPS = [
     'adventure.apps.poke',
-    'adventure.apps.trainer',
 ]
 
 INSTALLED_APPS = [
@@ -56,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
     'graphene_django',
     'corsheaders',
     'storages',
@@ -63,11 +63,21 @@ INSTALLED_APPS = [
 ] + CUSTOM_APPS
 
 GRAPHENE = {
+    'SUBSCRIPTION_PATH': '/ws/graphql/',
     'SCHEMA': 'adventure.schema.schema',
     'SCHEMA_INDENT': 4,
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(get_env_variable('DJANGO_REDIS_HOST'), 6379)],
+        },
+    },
 }
 
 MIDDLEWARE = [
@@ -92,7 +102,7 @@ ROOT_URLCONF = 'adventure.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,7 +116,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'adventure.wsgi.application'
-
+ASGI_APPLICATION = 'adventure.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
