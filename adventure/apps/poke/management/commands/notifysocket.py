@@ -12,7 +12,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        for poke in Pokemon.objects.all().prefetch_related('types'):
+        for poke in Pokemon.objects.all().order_by("?").prefetch_related('types'):
             time.sleep(.2)
             for poke_type in poke.types.all():
                 print(poke_type, poke.name)

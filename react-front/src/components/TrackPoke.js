@@ -80,8 +80,18 @@ const TrackPoke = (props) => {
       }
     };
 
-    const { data, loading } = useQuery(GET_ALL_TYPES, {});
+    const { data, loading, error } = useQuery(GET_ALL_TYPES, {});
     
+    if (error) {
+      return (
+        <div className='loading'>
+          <div>
+            Error...
+          </div>
+        </div>
+      )
+    } 
+
     if (loading) {
       return (
         <div className='loading'>
