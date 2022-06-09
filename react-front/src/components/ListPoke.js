@@ -1,38 +1,8 @@
 import React from 'react'
-//import { Link } from 'react-router-dom'
-import { graphql } from 'react-apollo'
+import { useQuery } from "@apollo/client";
+
 import gql from 'graphql-tag'
-import Poke from '../components/Poke'
-
-class ListPoke extends React.Component {
-
-  render(props) {
-
-    if (this.props.allPokemonsQuery.loading) {
-      return (
-        <div className='loading'>
-          <div>
-            Loading...
-          </div>
-        </div>
-      )
-    }
-
-    var pokes = this.props.allPokemonsQuery.allPokemons
-
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          {pokes.edges.map(poke => (
-            <div key={poke.node.pokeId}>
-              <Poke image={poke.node.imgDefaultField} name={poke.node.name} types={poke.node.types.edges} />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-}
+import Poke from './UI/Poke'
 
 const ALL_POKEMONS_QUERY = gql`
   query allPokemons {
@@ -55,8 +25,26 @@ const ALL_POKEMONS_QUERY = gql`
   }
 `
 
-const ListPokemonWithQuery = graphql(ALL_POKEMONS_QUERY, {
-  name: 'allPokemonsQuery',
-})(ListPoke)
+const ListPoke = (props) => {
+    const {loading, error, data} = useQuery(ALL_POKEMONS_QUERY);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
 
-export default ListPokemonWithQuery
+    return (
+        <div className="container-fluid">
+            <div className="row">
+                {data.allPokemons.edges.map((poke) => (
+                    <Poke
+                        key={poke.node.pokeId}
+                        image={poke.node.imgDefaultField}
+                        name={poke.node.name}
+                        types={poke.node.types.edges}/>
+
+                ))}
+            </div>
+        </div>
+    );
+
+};
+
+export default ListPoke

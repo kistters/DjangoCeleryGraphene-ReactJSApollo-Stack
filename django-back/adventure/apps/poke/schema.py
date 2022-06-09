@@ -6,12 +6,6 @@ from django.conf import settings
 from .models import Pokemon, Type
 
 
-def get_absolute_url(path=None):
-    if not path:
-        return settings.DOMAIN
-    return f'//{settings.DOMAIN}{path}'
-
-
 class PokemonType(DjangoObjectType):
     class Meta:
         model = Pokemon
@@ -26,7 +20,7 @@ class PokemonType(DjangoObjectType):
     img_default_field = graphene.String()
 
     def resolve_img_default_field(self, info, *args, **kwds):
-        return get_absolute_url(self.img_default and self.img_default.url)
+        return self.img_default.url
 
 
 class TypeType(DjangoObjectType):

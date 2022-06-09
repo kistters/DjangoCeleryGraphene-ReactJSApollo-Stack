@@ -1,5 +1,5 @@
 import React from 'react';
-import Type from '../components/Type'
+import Type from './Type'
 
 const poke = (props) => {
 

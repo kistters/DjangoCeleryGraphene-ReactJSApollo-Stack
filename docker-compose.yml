@@ -3,7 +3,7 @@ version: '3'
 services:
 
   react-front:
-    image: adventure-frontend
+    build: react-front
     volumes:
       - ./react-front:/usr/src/app:delegated
       - /usr/src/app/node_modules
@@ -11,19 +11,20 @@ services:
       - django-back
     ports:
       - "3000:3000"
-    command: npm start
+    command: ["npm", "start"]
     networks:
       - compose-network
 
   django-back:
-    image: adventure-backend
+    build: django-back
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
       - "8000:8000"
     env_file:
         - .env
     volumes:
-      - .:/code
+      - ./django-back:/code
+      - ./.storage:/storage
     environment:
       DJANGO_DATABASE_HOST: postgres-service
       DJANGO_REDIS_HOST: redis-service
@@ -34,19 +35,35 @@ services:
       - compose-network
 
   celery-worker-back:
-      image: adventure-backend
+      build: django-back
       command: celery -A adventure worker --loglevel=INFO
       ports: []
       env_file:
         - .env
       volumes:
-        - .:/code
+        - ./django-back:/code
+        - ./.storage:/storage
+      environment:
+        DJANGO_DATABASE_HOST: postgres-service
+        DJANGO_REDIS_HOST: redis-service
       depends_on:
         - rabbitmq-service
         - postgres-service
+        - redis-service
       networks:
         - compose-network
 
+  web:
+    image: nginx
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+        - ./nginx-web/conf.d:/etc/nginx/conf.d
+        - ./.storage:/www
+#    depends_on:
+#      - django-back
+#      - react-front
 
 ## -- services --
 
