@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
-from adventure.apps.poke.models import Pokemon, Type
+from adventure.pokemons.models import Pokemon, Type
 import requests
 
 class Command(BaseCommand):

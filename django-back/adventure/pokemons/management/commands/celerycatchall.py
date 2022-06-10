@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import requests, asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-from adventure.apps.poke.tasks import create_poke
+from adventure.pokemons.tasks import create_poke
 
 
 class Command(BaseCommand):

@@ -43,24 +43,21 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
-CUSTOM_APPS = [
-    'adventure.apps.poke',
-]
-
 INSTALLED_APPS = [
-                     'django.contrib.admin',
-                     'django.contrib.auth',
-                     'django.contrib.contenttypes',
-                     'django.contrib.sessions',
-                     'django.contrib.messages',
-                     'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
-                     'channels',
-                     'graphene_django',
-                     'corsheaders',
-                     'storages',
+    'channels',
+    'graphene_django',
+    'corsheaders',
+    'storages',
 
-                 ] + CUSTOM_APPS
+    'adventure.pokemons',
+]
 
 GRAPHENE = {
     'SUBSCRIPTION_PATH': '/ws/graphql/',
@@ -69,6 +66,7 @@ GRAPHENE = {
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
+    'RELAY_CONNECTION_MAX_LIMIT': 500,
 }
 
 CHANNEL_LAYERS = {
@@ -171,7 +169,5 @@ USE_TZ = False
 STATIC_ROOT = os.path.join(STORAGE_DIR, 'static/')
 MEDIA_ROOT = os.path.join(STORAGE_DIR, 'media/')
 
-DOMAIN = get_env_variable('DJANGO_DOMAIN')
-MEDIA_URL = 'http://localhost/media/'
-STATIC_URL = 'http://localhost/static/'
-
+MEDIA_URL = 'http:///0.0.0.0/media/'
+STATIC_URL = 'http:///0.0.0.0/static/'

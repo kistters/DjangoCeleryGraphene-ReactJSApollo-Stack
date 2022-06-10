@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactDOM, {render} from 'react-dom';
-//import './styles/index.css';
+import ReactDOM from 'react-dom';
+import './styles/index.css';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -37,7 +37,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 })
 
-render(
+ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>,

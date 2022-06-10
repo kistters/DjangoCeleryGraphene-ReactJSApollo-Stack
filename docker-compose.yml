@@ -61,9 +61,9 @@ services:
     volumes:
         - ./nginx-web/conf.d:/etc/nginx/conf.d
         - ./.storage:/www
-#    depends_on:
-#      - django-back
-#      - react-front
+    depends_on:
+      - django-back
+      - react-front
 
 ## -- services --
 

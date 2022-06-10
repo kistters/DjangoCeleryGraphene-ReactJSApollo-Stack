@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poke', '0002_include_poke_infos'),
+        ('pokemons', '0002_include_pokemon_infos'),
     ]
 
     operations = [

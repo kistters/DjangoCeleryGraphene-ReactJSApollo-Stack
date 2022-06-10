@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from adventure.apps.poke.models import Pokemon
-from adventure.apps.poke.schema import PokeEvent
+from adventure.pokemons.models import Pokemon
+from adventure.pokemons.schema import PokeEvent
 import time
 
 

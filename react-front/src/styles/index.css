@@ -13,12 +13,37 @@ code {
     monospace;
 }
 
-.App {
-  border: solid 1px
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #dddddd;
 }
 
-.poke {
-  border: solid 2px red;
-  padding-bottom: 1px;
+li {
+  float: left;
 }
 
+li a {
+  display: block;
+  padding: 8px;
+}
+
+button {
+  background-color: gray;
+  border: none;
+  color: white;
+  /*padding: 15px 32px;*/
+  transition-duration: 0.2s;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: green;
+  color: white;
+}

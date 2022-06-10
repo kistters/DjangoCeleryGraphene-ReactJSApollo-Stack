@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poke', '0001_initial'),
+        ('pokemons', '0001_initial'),
     ]
 
     operations = [
@@ -17,12 +17,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pokemon',
             name='img_default',
-            field=models.ImageField(upload_to='pokes/'),
+            field=models.ImageField(upload_to='pokemons/'),
         ),
         migrations.AddField(
             model_name='pokemon',
             name='img_shiny',
-            field=models.ImageField( upload_to='pokes/'),
+            field=models.ImageField(upload_to='pokemons/'),
         ),
         migrations.AddField(
             model_name='pokemon',

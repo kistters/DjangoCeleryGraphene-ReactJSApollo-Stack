@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from adventure.apps.poke.models import Pokemon, Type
+from adventure.pokemons.models import Pokemon, Type
 
 class Command(BaseCommand):
     help = 'Find pokes'

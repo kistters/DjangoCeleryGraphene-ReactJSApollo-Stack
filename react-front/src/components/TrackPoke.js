@@ -46,7 +46,7 @@ const TrackeDisplay = (props) => {
         {variables: {pokeTypes: props.pokeTypes,}}
     );
 
-    if (!data) return <p>Choose Types</p>;
+    if (!data || loading) return <p></p>;
 
     const {event, pokemon} = data.pokeEvent
     return (
@@ -60,50 +60,46 @@ const TrackeDisplay = (props) => {
 }
 
 const TrackPoke = (props) => {
-    const [pokeTypes, setType] = useState([]);
-    const addType = (pokeType) => {
-        if (!pokeTypes.includes(pokeType)) {
-            setType([...pokeTypes, pokeType])
-        }
-    };
-
-    const removeType = (pokeType) => {
-        if (pokeTypes.includes(pokeType)) {
-            setType(pokeTypes.filter(type => type !== pokeType))
-        }
-    };
-
+    const [typeOptions, setTypeOptions] = useState([]);
     const {data, loading, error} = useQuery(GET_ALL_TYPES, {});
 
-        if (error) return <p>Error...</p>;
-        if (loading) return <p>Loading...</p>;
 
-    const {edges: allTypes = []} = data.allTypes
+    const handleOptions = (optionSelected) => {
+        if (typeOptions.includes(optionSelected)) {
+            setTypeOptions(typeOptions.filter((option) => option !== optionSelected))
+        } else {
+            setTypeOptions([...typeOptions, optionSelected])
+        }
+    };
+
+    if (error) return <p>Error...</p>;
+    if (loading) return <p>Loading...</p>;
+
+    const dataAllTypes = data.allTypes.edges.map(edge => edge.node.name)
 
     return (
         <div>
             <h3>Add Type to Tracker</h3>
-            {allTypes.map((edge) => edge.node).map((pokeType) => {
-                const {name: TypeName} = pokeType
+
+            {typeOptions.length ?
+                <button onClick={() => setTypeOptions([])}>Reset</button> :
+                <button onClick={() => setTypeOptions(dataAllTypes)}>All</button>
+            }
+
+
+            {dataAllTypes.map((option) => {
                 return (
-                    <button key={`add` + TypeName} onClick={() => addType(TypeName)}>
-                        {TypeName}
+                    <button
+                        key={`add` + option}
+                        style={{backgroundColor: typeOptions.includes(option) ? 'green' : ''}}
+                        onClick={() => handleOptions(option)}>
+                        {option}
                     </button>
                 )
             })}
-
             <div style={{minHeight: "200px", marginLeft: '10%'}}>
-                <TrackeDisplay pokeTypes={pokeTypes}/>
+                <TrackeDisplay pokeTypes={typeOptions}/>
             </div>
-
-            <p>Remove Type of Tracker</p>
-            {pokeTypes.map((TypeName) => {
-                return (
-                    <button key={`remove` + TypeName} onClick={() => removeType(TypeName)}>
-                        {TypeName}
-                    </button>
-                )
-            })}
         </div>
     )
 };

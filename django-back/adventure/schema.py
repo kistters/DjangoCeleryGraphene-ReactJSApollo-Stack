@@ -1,7 +1,7 @@
 import graphene
 import graphql_jwt
 
-from .apps.poke import schema as PokeSchema
+from .pokemons import schema as PokeSchema
 
 
 class Query(graphene.ObjectType, PokeSchema.Query):
@@ -10,7 +10,7 @@ class Query(graphene.ObjectType, PokeSchema.Query):
     pass
 
 
-class Mutation(graphene.ObjectType):
+class Mutation(graphene.ObjectType, PokeSchema.Mutation):
     """docstring for Mutation"""
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()

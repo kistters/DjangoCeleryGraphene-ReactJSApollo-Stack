@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pokemon',
             name='types',
-            field=models.ManyToManyField(to='poke.Type'),
+            field=models.ManyToManyField(to='pokemons.Type'),
         ),
     ]
